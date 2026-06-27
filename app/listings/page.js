@@ -1,19 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-
-const lodges = [
-  { id: 1, title: "2-bedroom self-contain", location: "Otolo, Nnewi", distance: "5 mins to school gate", firstYear: "₦300,000", renewal: "₦250,000", campus: "Nnewi", verified: true, bg: "from-blue-900 to-blue-700", type: "Self-contain" },
-  { id: 2, title: "Single room (shared)", location: "Uruagu, Nnewi", distance: "10 mins to school gate", firstYear: "₦150,000", renewal: "₦120,000", campus: "Nnewi", verified: true, bg: "from-purple-900 to-purple-700", type: "Shared room" },
-  { id: 3, title: "Mini flat — ensuite", location: "Nnewi town", distance: "15 mins to school gate", firstYear: "₦220,000", renewal: "₦180,000", campus: "Nnewi", verified: false, bg: "from-green-900 to-green-700", type: "Mini flat" },
-  { id: 4, title: "1-bedroom flat", location: "Awka south", distance: "8 mins to school gate", firstYear: "₦280,000", renewal: "₦230,000", campus: "Awka", verified: true, bg: "from-orange-900 to-orange-700", type: "Mini flat" },
-  { id: 5, title: "Self-contain (ensuite)", location: "Ifite, Awka", distance: "3 mins to school gate", firstYear: "₦350,000", renewal: "₦300,000", campus: "Awka", verified: true, bg: "from-teal-900 to-teal-700", type: "Self-contain" },
-  { id: 6, title: "Shared room (2 per room)", location: "Agulu town", distance: "12 mins to school gate", firstYear: "₦100,000", renewal: "₦80,000", campus: "Agulu", verified: false, bg: "from-red-900 to-red-700", type: "Shared room" },
-];
+import { supabase } from "@/lib/supabase";
 
 export default function Listings() {
+  const [lodges, setLodges] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeCampus, setActiveCampus] = useState("All");
   const [activeType, setActiveType] = useState("All");
+
+  useEffect(() => {
+    fetchListings();
+  }, []);
+
+  async function fetchListings() {
+    const { data, error } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("approved", true);
+
+    if (error) {
+      console.error("Error fetching listings:", error);
+    } else {
+      setLodges(data || []);
+    }
+    setLoading(false);
+  }
 
   const filtered = lodges.filter((l) => {
     const campusMatch = activeCampus === "All" || l.campus === activeCampus;
@@ -35,7 +47,7 @@ export default function Listings() {
         <div className="hidden md:flex items-center gap-6">
           <Link href="/listings" className="text-white text-sm font-medium">Listings</Link>
           <span className="text-white/75 text-sm cursor-pointer hover:text-white">About</span>
-          <span className="text-white/75 text-sm cursor-pointer hover:text-white">List your lodge</span>
+          <Link href="/apply" className="text-white/75 text-sm hover:text-white">List your lodge</Link>
           <button className="bg-[#F47920] text-white text-xs font-medium px-4 py-2 rounded-full">Find a lodge</button>
         </div>
       </nav>
@@ -83,17 +95,33 @@ export default function Listings() {
       </div>
 
       <section className="bg-gray-50 px-6 py-8">
-        {filtered.length === 0 ? (
-          <div className="text-center py-20 text-gray-400 text-sm">No lodges found for this filter.</div>
+        {loading ? (
+          <div className="text-center py-20 text-gray-400 text-sm">Loading lodges...</div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="text-4xl mb-3">🏠</div>
+            <div className="text-gray-500 text-sm">No lodges available yet. Check back soon.</div>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {filtered.map((lodge) => (
               <Link href={`/listings/${lodge.id}`} key={lodge.id} className="block">
                 <div className="border border-gray-100 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow">
-                  <div className={`bg-gradient-to-br ${lodge.bg} aspect-video flex items-center justify-center relative`}>
-                    <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center">
-                      <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-[14px] border-l-[#003580] ml-1" />
-                    </div>
+                  <div className="aspect-video bg-[#001F4D] flex items-center justify-center relative">
+                    {lodge.video_url ? (
+                      <video
+                        src={lodge.video_url}
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center">
+                        <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-[14px] border-l-[#003580] ml-1" />
+                      </div>
+                    )}
                     <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded">▶ Autoplays</div>
                     {lodge.verified && (
                       <div className="absolute top-2 right-2 bg-[#F47920] text-white text-[9px] font-medium px-2 py-0.5 rounded">Verified</div>
@@ -105,11 +133,11 @@ export default function Listings() {
                     <div className="flex gap-2 mb-3">
                       <div className="flex-1 bg-gray-50 rounded-lg p-2">
                         <div className="text-[9px] text-gray-400 mb-0.5">First year</div>
-                        <div className="text-xs font-semibold text-[#003580]">{lodge.firstYear}</div>
+                        <div className="text-xs font-semibold text-[#003580]">{lodge.first_year_price}</div>
                       </div>
                       <div className="flex-1 bg-gray-50 rounded-lg p-2">
                         <div className="text-[9px] text-gray-400 mb-0.5">Renewal</div>
-                        <div className="text-xs font-semibold text-green-700">{lodge.renewal}</div>
+                        <div className="text-xs font-semibold text-green-700">{lodge.renewal_price}</div>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
