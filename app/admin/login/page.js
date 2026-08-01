@@ -47,7 +47,7 @@ export default function AdminLogin() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full border rounded px-3 py-2 mb-4 text-sm"
+          className="w-full border rounded px-3 py-2 mb-4 text-sm text-gray-900"
         />
 
         <label className="block text-sm text-gray-600 mb-1">Password</label>
@@ -56,7 +56,7 @@ export default function AdminLogin() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full border rounded px-3 py-2 mb-6 text-sm"
+          className="w-full border rounded px-3 py-2 mb-6 text-sm text-gray-900"
         />
 
         <button
