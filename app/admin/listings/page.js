@@ -76,6 +76,41 @@ export default function AdminListings() {
     }));
   };
 
+        const [uploadingVideo, setUploadingVideo] = useState(false);
+
+        const handleVideoUpload = async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          if (file.size > 50 * 1024 * 1024) {
+            setError("Video must be under 50MB.");
+            return;
+          }
+
+          setUploadingVideo(true);
+          setError("");
+
+          const fileExt = file.name.split(".").pop();
+          const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("lodge-videos")
+            .upload(fileName, file);
+
+          if (uploadError) {
+            setError(uploadError.message);
+            setUploadingVideo(false);
+            return;
+          }
+
+          const { data: urlData } = supabase.storage
+            .from("lodge-videos")
+            .getPublicUrl(fileName);
+
+          setForm((prev) => ({ ...prev, video_url: urlData.publicUrl }));
+          setUploadingVideo(false);
+        };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -293,15 +328,35 @@ export default function AdminListings() {
               </div>
 
               <div>
-                <label className="block text-xs text-gray-600 mb-1">Video URL</label>
-                <input
-                  name="video_url"
-                  value={form.video_url}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  className="w-full border rounded px-3 py-2 text-sm text-gray-900"
-                />
-              </div>
+                  <label className="block text-xs text-gray-600 mb-1">Lodge Video</label>
+                  {form.video_url && (
+                    <div className="mb-2">
+                      <video
+                        src={form.video_url}
+                        controls
+                        className="w-full max-h-40 rounded border"
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="video/mp4,video/quicktime,video/webm"
+                    onChange={handleVideoUpload}
+                    className="w-full border rounded px-3 py-2 text-sm text-gray-900"
+                  />
+                  {uploadingVideo && (
+                    <p className="text-xs text-gray-500 mt-1">Uploading video...</p>
+                  )}
+                  {form.video_url && !uploadingVideo && (
+                    <button
+                      type="button"
+                      onClick={() => setForm((prev) => ({ ...prev, video_url: "" }))}
+                      className="text-xs text-red-600 mt-1"
+                    >
+                      Remove video
+                    </button>
+                  )}
+                </div>
 
               <div className="flex items-center gap-6 pt-1">
                 <label className="flex items-center gap-2 text-sm text-gray-700">
