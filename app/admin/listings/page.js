@@ -233,28 +233,36 @@ export default function AdminListings() {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">Campus</label>
-                  <input
-                    name="campus"
-                    value={form.campus}
-                    onChange={handleChange}
-                    placeholder="Nnewi / Awka / Agulu"
-                    required
-                    className="w-full border rounded px-3 py-2 text-sm text-gray-900"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">Type</label>
-                  <input
-                    name="type"
-                    value={form.type}
-                    onChange={handleChange}
-                    placeholder="Self-contain / Mini flat / Shared room"
-                    required
-                    className="w-full border rounded px-3 py-2 text-sm text-gray-900"
-                  />
-                </div>
+          <div>
+  <label className="block text-xs text-gray-600 mb-1">Campus</label>
+  <select
+    name="campus"
+    value={form.campus}
+    onChange={handleChange}
+    required
+    className="w-full border rounded px-3 py-2 text-sm text-gray-900 bg-white"
+  >
+    <option value="">Select campus</option>
+    <option value="Nnewi">Nnewi</option>
+    <option value="Awka">Awka</option>
+    <option value="Agulu">Agulu</option>
+  </select>
+</div>
+<div>
+  <label className="block text-xs text-gray-600 mb-1">Type</label>
+  <select
+    name="type"
+    value={form.type}
+    onChange={handleChange}
+    required
+    className="w-full border rounded px-3 py-2 text-sm text-gray-900 bg-white"
+  >
+    <option value="">Select type</option>
+    <option value="Self-contain">Self-contain</option>
+    <option value="Mini flat">Mini flat</option>
+    <option value="Shared room">Shared room</option>
+  </select>
+</div>
               </div>
 
               <div>

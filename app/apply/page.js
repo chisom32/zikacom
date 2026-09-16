@@ -96,7 +96,7 @@ export default function Apply() {
                 value={form.full_name}
                 onChange={handleChange}
                 placeholder="Your full name"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580]transition-colors text-gray-900"
               />
             </div>
             <div>
@@ -106,7 +106,7 @@ export default function Apply() {
                 value={form.phone}
                 onChange={handleChange}
                 placeholder="08012345678"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors text-gray-900"
               />
             </div>
             <div>
@@ -115,7 +115,7 @@ export default function Apply() {
                 name="campus"
                 value={form.campus}
                 onChange={handleChange}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors bg-white"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors text-gray-900"
               >
                 <option value="">Select campus</option>
                 <option value="Nnewi">Nnewi</option>
@@ -130,7 +130,7 @@ export default function Apply() {
                 value={form.num_listings}
                 onChange={handleChange}
                 placeholder="How many lodges do you have?"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580]transition-colors text-gray-900"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ export default function Apply() {
               value={form.description}
               onChange={handleChange}
               placeholder="Tell us about your lodges — location, type, amenities..."
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors resize-none h-28"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003580] transition-colors resize-none h-28 text-gray-900"
             />
           </div>
 

@@ -27,11 +27,15 @@ export default function Listings() {
     setLoading(false);
   }
 
-  const filtered = lodges.filter((l) => {
-    const campusMatch = activeCampus === "All" || l.campus === activeCampus;
-    const typeMatch = activeType === "All" || l.type === activeType;
-    return campusMatch && typeMatch;
-  });
+ const filtered = lodges.filter((l) => {
+  const campusMatch =
+    activeCampus === "All" ||
+    l.campus?.trim().toLowerCase() === activeCampus.toLowerCase();
+  const typeMatch =
+    activeType === "All" ||
+    l.type?.trim().toLowerCase() === activeType.toLowerCase();
+  return campusMatch && typeMatch;
+});
 
   return (
     <main className="min-h-screen font-sans">
